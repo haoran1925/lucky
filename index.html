@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>幸运语句</title>
+  <style>
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"PingFang SC","Microsoft YaHei",sans-serif;background:#f6f7fb;color:#111}
+    .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    .card{max-width:720px;width:100%;background:#fff;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.08);padding:26px}
+    .badge{display:inline-block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#6b7280;background:#f3f4f6;border-radius:999px;padding:6px 10px}
+    h1{margin:14px 0 8px;font-size:22px}
+    .quote{margin:14px 0 10px;font-size:28px;line-height:1.35;font-weight:700}
+    .meta{margin-top:14px;color:#6b7280;font-size:13px}
+    .btns{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+    button{cursor:pointer;border:0;border-radius:12px;padding:10px 14px;font-size:14px}
+    .ghost{background:#f3f4f6}
+    .primary{background:#111;color:#fff}
+    .hint{margin-top:10px;color:#9ca3af;font-size:12px}
+    .small{font-size:12px;color:#6b7280}
+    a{color:#111}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <span class="badge">Your first draw sticks</span>
+      <h1>你的幸运语句</h1>
+      <div id="quote" class="quote">正在抽取…</div>
+      <div class="meta" id="meta"></div>
+
+      <div class="btns">
+        <button class="primary" id="copyBtn">复制这句话</button>
+        <button class="ghost" id="shareBtn">分享</button>
+      </div>
+
+      <div class="hint">
+        同一台设备/浏览器只会显示第一次抽到的内容。无痕模式、换设备或清理缓存会重新抽取。
+      </div>
+
+      <!-- 管理员重置：访问链接加 ?reset=1 可清除并重新抽（可删掉这一段） -->
+      <div class="small" id="admin"></div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  // ====== 1) 在这里改成你的“幸运语句库” ======
+  const PHRASES = [
+    "愿你今天充满平安。",
+    "你被爱着，也被看见。",
+    "凡事都有美意，慢慢来。",
+    "勇敢一点，你正在变好。",
+    "今天会有好消息。",
+    "你比自己想象的更强大。",
+    "别怕，路会越走越亮。",
+    "祝福与你同行。"
+  ];
+  // =========================================
+
+  const STORAGE_KEY = "lucky_phrase_v1";
+
+  const qs = new URLSearchParams(location.search);
+  const reset = qs.get("reset") === "1";
+
+  if (reset) {
+    localStorage.removeItem(STORAGE_KEY);
+  }
+
+  const elQuote = document.getElementById("quote");
+  const elMeta  = document.getElementById("meta");
+  const elAdmin = document.getElementById("admin");
+
+  function pickOne(arr) {
+    const i = Math.floor(Math.random() * arr.length);
+    return arr[i];
+  }
+
+  function nowISO() {
+    // 简单记录本地时间（不是必须）
+    const d = new Date();
+    const pad = (n) => String(n).padStart(2,"0");
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  let saved = null;
+  try {
+    saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+  } catch { saved = null; }
+
+  if (!saved || !saved.text) {
+    const text = pickOne(PHRASES);
+    saved = { text, firstSeenAt: nowISO() };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+  }
+
+  elQuote.textContent = saved.text;
+  elMeta.textContent = saved.firstSeenAt ? `首次抽取时间：${saved.firstSeenAt}` : "";
+
+  // 复制
+  document.getElementById("copyBtn").addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(saved.text);
+      alert("已复制 ✅");
+    } catch {
+      // 兼容处理
+      const ta = document.createElement("textarea");
+      ta.value = saved.text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+      alert("已复制 ✅");
+    }
+  });
+
+  // 分享（手机上会弹系统分享面板）
+  document.getElementById("shareBtn").addEventListener("click", async () => {
+    const shareText = `我抽到的幸运语句：${saved.text}`;
+    if (navigator.share) {
+      try { await navigator.share({ text: shareText, title: "幸运语句" }); }
+      catch {}
+    } else {
+      // 不支持 share 就复制
+      try { await navigator.clipboard.writeText(shareText); alert("已复制分享内容 ✅"); }
+      catch { alert(shareText); }
+    }
+  });
+
+  // 管理员提示（可删）
+  if (reset) elAdmin.innerHTML = "已重置本机记录（仅当前设备）";
+  else elAdmin.innerHTML = `管理员可用：在链接后加 <b>?reset=1</b> 进行本机重置（可删除此功能）`;
+})();
+</script>
+</body>
+</html>
