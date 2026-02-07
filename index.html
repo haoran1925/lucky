@@ -3,133 +3,480 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>幸运语句</title>
+  <title>新年祝福抽签 | 春节经文</title>
+  <meta name="description" content="扫码抽取你的新年祝福经文：每个人第一次抽到的内容固定不变。" />
   <style>
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"PingFang SC","Microsoft YaHei",sans-serif;background:#f6f7fb;color:#111}
-    .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-    .card{max-width:720px;width:100%;background:#fff;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.08);padding:26px}
-    .badge{display:inline-block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#6b7280;background:#f3f4f6;border-radius:999px;padding:6px 10px}
-    h1{margin:14px 0 8px;font-size:22px}
-    .quote{margin:14px 0 10px;font-size:28px;line-height:1.35;font-weight:700}
-    .meta{margin-top:14px;color:#6b7280;font-size:13px}
-    .btns{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
-    button{cursor:pointer;border:0;border-radius:12px;padding:10px 14px;font-size:14px}
-    .ghost{background:#f3f4f6}
-    .primary{background:#111;color:#fff}
-    .hint{margin-top:10px;color:#9ca3af;font-size:12px}
-    .small{font-size:12px;color:#6b7280}
-    a{color:#111}
+    :root{
+      --bg1:#2b0000;
+      --bg2:#7a0000;
+      --card:#fff7ee;
+      --gold:#f3c969;
+      --gold2:#ffd86b;
+      --red:#d30000;
+      --ink:#1a1a1a;
+      --muted:#6b7280;
+      --shadow: 0 18px 60px rgba(0,0,0,.35);
+      --radius: 22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+      color: var(--ink);
+      background: radial-gradient(1200px 800px at 20% 10%, #b30000 0%, transparent 60%),
+                  radial-gradient(1000px 700px at 80% 0%, #ffb70333 0%, transparent 65%),
+                  linear-gradient(180deg, var(--bg2), var(--bg1));
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+    .wrap{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px 18px 44px;
+      position:relative;
+    }
+    /* subtle fireworks dots */
+    .spark{
+      position:absolute; inset:0;
+      pointer-events:none;
+      opacity:.55;
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(255,216,107,.9) 0 1.3px, transparent 2.2px),
+        radial-gradient(circle at 18% 60%, rgba(255,216,107,.55) 0 1.2px, transparent 2.6px),
+        radial-gradient(circle at 80% 22%, rgba(255,216,107,.75) 0 1.4px, transparent 2.8px),
+        radial-gradient(circle at 72% 70%, rgba(255,216,107,.45) 0 1.1px, transparent 2.6px),
+        radial-gradient(circle at 48% 30%, rgba(255,255,255,.35) 0 1px, transparent 2.6px),
+        radial-gradient(circle at 55% 80%, rgba(255,255,255,.25) 0 1px, transparent 2.8px);
+      background-size: 100% 100%;
+      filter: blur(.2px);
+    }
+
+    /* lanterns */
+    .lantern{
+      position:absolute;
+      width:120px; height:160px;
+      top:22px;
+      border-radius: 28px;
+      background: radial-gradient(60px 80px at 50% 35%, #ff6b6b 0%, #d10000 55%, #8a0000 100%);
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+      transform-origin: top center;
+      animation: sway 4.6s ease-in-out infinite;
+      overflow:hidden;
+    }
+    .lantern:before{
+      content:"";
+      position:absolute; left:50%; top:-22px;
+      width:6px; height:34px;
+      transform:translateX(-50%);
+      background: linear-gradient(180deg, #ffdf85, #b8860b);
+      border-radius: 999px;
+      opacity:.95;
+    }
+    .lantern:after{
+      content:"";
+      position:absolute; left:50%; bottom:-16px;
+      width:38px; height:28px;
+      transform:translateX(-50%);
+      background: linear-gradient(180deg, #ffdf85, #b8860b);
+      border-radius: 0 0 999px 999px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.2);
+    }
+    .lantern .rib{
+      position:absolute; inset:12px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,216,107,.65);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.05);
+    }
+    .lantern .tag{
+      position:absolute; left:50%; top:58px;
+      transform:translateX(-50%);
+      padding:6px 12px;
+      font-weight:800;
+      letter-spacing:.12em;
+      font-size:12px;
+      color:#7a0000;
+      background: linear-gradient(180deg, var(--gold2), var(--gold));
+      border-radius: 999px;
+      box-shadow: 0 10px 20px rgba(0,0,0,.18);
+      text-transform: uppercase;
+    }
+    .lantern.left{left:18px}
+    .lantern.right{right:18px; animation-delay:-1.2s}
+
+    @keyframes sway{
+      0%,100%{transform: rotate(-3deg) translateY(0)}
+      50%{transform: rotate(3.5deg) translateY(3px)}
+    }
+
+    /* card */
+    .card{
+      width:min(860px, 100%);
+      background: linear-gradient(180deg, #fffaf3 0%, var(--card) 45%, #fff2e1 100%);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      position:relative;
+      padding: 22px 22px 18px;
+      border: 1px solid rgba(255,216,107,.4);
+      overflow:hidden;
+    }
+    .card:before{
+      content:"";
+      position:absolute; inset:-120px -120px auto auto;
+      width:300px; height:300px;
+      background: radial-gradient(circle, rgba(255,216,107,.35), transparent 65%);
+      transform: rotate(18deg);
+      pointer-events:none;
+    }
+    .top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      min-width:0;
+    }
+    .seal{
+      width:44px; height:44px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #ffdf85, #c79b2c);
+      box-shadow: 0 10px 20px rgba(0,0,0,.15);
+      display:flex; align-items:center; justify-content:center;
+      font-weight:900;
+      color:#7a0000;
+    }
+    .titles h1{
+      margin:0;
+      font-size: 18px;
+      letter-spacing:.02em;
+      color:#7a0000;
+    }
+    .titles p{
+      margin:4px 0 0;
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height:1.25;
+    }
+    .badge{
+      flex:0 0 auto;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      background: rgba(211,0,0,.08);
+      color:#7a0000;
+      border: 1px solid rgba(211,0,0,.18);
+      font-size:12px;
+      font-weight:700;
+      white-space:nowrap;
+    }
+
+    .quoteBox{
+      margin-top: 10px;
+      padding: 18px 16px;
+      border-radius: 18px;
+      background: #ffffff;
+      border: 1px solid rgba(255,216,107,.45);
+      box-shadow: 0 10px 22px rgba(0,0,0,.06);
+      position:relative;
+    }
+    .quoteBox .label{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.12em;
+      color:#7a0000;
+      text-transform:uppercase;
+      background: linear-gradient(180deg, rgba(255,216,107,.55), rgba(255,216,107,.18));
+      padding:7px 10px;
+      border-radius:999px;
+      border: 1px solid rgba(255,216,107,.5);
+    }
+    .quote{
+      margin: 12px 0 0;
+      font-size: 22px;
+      line-height: 1.45;
+      font-weight: 800;
+      color:#111;
+      word-break: break-word;
+    }
+    .ref{
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height:1.5;
+    }
+    .ref b{color:#7a0000}
+
+    .metaRow{
+      display:flex; flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 12.5px;
+    }
+
+    .btns{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top: 16px;
+    }
+    button{
+      cursor:pointer;
+      border:0;
+      padding: 11px 14px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+    .primary{
+      background: linear-gradient(180deg, #d30000, #8a0000);
+      color:#fff;
+      box-shadow: 0 14px 24px rgba(211,0,0,.28);
+    }
+    .ghost{
+      background: #f3f4f6;
+      color:#111;
+      border: 1px solid rgba(0,0,0,.08);
+    }
+    .small{
+      margin-top: 10px;
+      font-size: 12px;
+      color: #9ca3af;
+      line-height: 1.45;
+    }
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background: rgba(17,17,17,.92);
+      color: #fff;
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      opacity: 0;
+      pointer-events:none;
+      transition: opacity .25s ease;
+      z-index: 9999;
+      max-width: 92vw;
+      text-align:center;
+    }
+    .toast.show{opacity:1}
+    @media (max-width:520px){
+      .lantern{display:none}
+      .quote{font-size:20px}
+      .card{padding:18px 16px 16px}
+    }
   </style>
 </head>
+
 <body>
   <div class="wrap">
-    <div class="card">
-      <span class="badge">Your first draw sticks</span>
-      <h1>你的幸运语句</h1>
-      <div id="quote" class="quote">正在抽取…</div>
-      <div class="meta" id="meta"></div>
+    <div class="spark"></div>
+    <div class="lantern left"><div class="rib"></div><div class="tag">福</div></div>
+    <div class="lantern right"><div class="rib"></div><div class="tag">安</div></div>
+
+    <div class="card" role="main" aria-label="新年祝福抽签卡片">
+      <div class="top">
+        <div class="brand">
+          <div class="seal">🧧</div>
+          <div class="titles">
+            <h1>新年祝福抽签</h1>
+            <p>扫码抽取你的经文祝福（同一设备/浏览器只抽一次）</p>
+          </div>
+        </div>
+        <div class="badge">🎉 First draw sticks</div>
+      </div>
+
+      <div class="quoteBox">
+        <div class="label">今日祝福 BLESSING</div>
+        <div id="quote" class="quote">正在抽取…</div>
+        <div id="ref" class="ref"></div>
+      </div>
+
+      <div class="metaRow">
+        <div id="meta"></div>
+        <div id="count" class="small"></div>
+      </div>
 
       <div class="btns">
-        <button class="primary" id="copyBtn">复制这句话</button>
+        <button class="primary" id="copyBtn">复制祝福</button>
         <button class="ghost" id="shareBtn">分享</button>
+        <button class="ghost" id="newBtn" title="这会在你本机重置后重新抽取">本机重抽（测试用）</button>
       </div>
 
-      <div class="hint">
-        同一台设备/浏览器只会显示第一次抽到的内容。无痕模式、换设备或清理缓存会重新抽取。
+      <div class="small">
+        温馨提示：无痕模式、换手机/浏览器、或清除网站数据，会被视为新用户重新抽取。
       </div>
-
-      <!-- 管理员重置：访问链接加 ?reset=1 可清除并重新抽（可删掉这一段） -->
-      <div class="small" id="admin"></div>
     </div>
+
+    <div id="toast" class="toast">已复制 ✅</div>
   </div>
 
 <script>
 (() => {
-  // ====== 1) 在这里改成你的“幸运语句库” ======
+  // ===========================
+  // 1) 这里是“幸运语句库”（50句，中英文+出处）
+  //    格式：中文 — 书名 章:节 | English — Book Chapter:Verse
+  // ===========================
   const PHRASES = [
-    "愿你今天充满平安。",
-    "你被爱着，也被看见。",
-    "凡事都有美意，慢慢来。",
-    "勇敢一点，你正在变好。",
-    "今天会有好消息。",
-    "你比自己想象的更强大。",
-    "别怕，路会越走越亮。",
-    "祝福与你同行。"
+    "愿耶和华赐福给你，保护你。— 民数记 6:24 | The Lord bless you and keep you. — Numbers 6:24",
+    "愿耶和华使他的脸光照你。— 民数记 6:25 | The Lord make His face shine upon you. — Numbers 6:25",
+    "愿耶和华向你仰脸，赐你平安。— 民数记 6:26 | The Lord give you peace. — Numbers 6:26",
+    "你要专心仰赖耶和华。— 箴言 3:5 | Trust in the Lord with all your heart. — Proverbs 3:5",
+    "在你一切所行的事上都要认定他。— 箴言 3:6 | In all your ways acknowledge Him. — Proverbs 3:6",
+    "喜乐的心乃是良药。— 箴言 17:22 | A joyful heart is good medicine. — Proverbs 17:22",
+    "敬畏耶和华，使人日子加多。— 箴言 10:27 | The fear of the Lord adds length to life. — Proverbs 10:27",
+    "耶和华所赐的福使人富足。— 箴言 10:22 | The blessing of the Lord brings wealth. — Proverbs 10:22",
+    "凡敬畏耶和华的人便为有福。— 诗篇 128:1 | Blessed are all who fear the Lord. — Psalm 128:1",
+    "你出你入，耶和华要保护你。— 诗篇 121:8 | The Lord will watch over your coming and going. — Psalm 121:8",
+    "神是我们的避难所和力量。— 诗篇 46:1 | God is our refuge and strength. — Psalm 46:1",
+    "当将你的事交托耶和华。— 诗篇 37:5 | Commit your way to the Lord. — Psalm 37:5",
+    "你们要休息，要知道我是神。— 诗篇 46:10 | Be still and know that I am God. — Psalm 46:10",
+    "我的心哪，你要称颂耶和华。— 诗篇 103:1 | Praise the Lord, my soul. — Psalm 103:1",
+    "耶和华是我的牧者，我必不致缺乏。— 诗篇 23:1 | The Lord is my shepherd; I lack nothing. — Psalm 23:1",
+    "你们要靠主常常喜乐。— 腓立比书 4:4 | Rejoice in the Lord always. — Philippians 4:4",
+    "应当一无挂虑。— 腓立比书 4:6 | Do not be anxious about anything. — Philippians 4:6",
+    "神所赐的平安必保守你们的心怀意念。— 腓立比书 4:7 | The peace of God will guard your hearts. — Philippians 4:7",
+    "我靠着那加给我力量的，凡事都能做。— 腓立比书 4:13 | I can do all things through Him who strengthens me. — Philippians 4:13",
+    "我们晓得万事都互相效力。— 罗马书 8:28 | In all things God works for good. — Romans 8:28",
+    "爱是恒久忍耐，又有恩慈。— 哥林多前书 13:4 | Love is patient, love is kind. — 1 Corinthians 13:4",
+    "如今常存的有信、望、爱。— 哥林多前书 13:13 | Faith, hope and love remain. — 1 Corinthians 13:13",
+    "你当刚强壮胆。— 约书亚记 1:9 | Be strong and courageous. — Joshua 1:9",
+    "因为耶和华你的神与你同在。— 约书亚记 1:9 | The Lord your God will be with you. — Joshua 1:9",
+    "主是我的亮光，是我的拯救。— 诗篇 27:1 | The Lord is my light and my salvation. — Psalm 27:1",
+    "投靠耶和华的人有福了。— 诗篇 2:12 | Blessed are all who take refuge in Him. — Psalm 2:12",
+    "耶和华靠近伤心的人。— 诗篇 34:18 | The Lord is close to the brokenhearted. — Psalm 34:18",
+    "当称谢进入他的门。— 诗篇 100:4 | Enter His gates with thanksgiving. — Psalm 100:4",
+    "你们要赞美耶和华。— 诗篇 150:6 | Let everything that has breath praise the Lord. — Psalm 150:6",
+    "敬畏耶和华是智慧的开端。— 箴言 9:10 | The fear of the Lord is the beginning of wisdom. — Proverbs 9:10",
+    "耶和华必成就关乎我的事。— 诗篇 138:8 | The Lord will fulfill His purpose for me. — Psalm 138:8",
+    "你们要先求他的国和他的义。— 马太福音 6:33 | Seek first His kingdom and His righteousness. — Matthew 6:33",
+    "叩门的就给他开门。— 马太福音 7:8 | The one who knocks, the door will be opened. — Matthew 7:8",
+    "凡劳苦担重担的人可以到我这里来。— 马太福音 11:28 | Come to me, all who are weary. — Matthew 11:28",
+    "你们心里不要忧愁。— 约翰福音 14:1 | Do not let your hearts be troubled. — John 14:1",
+    "我留下平安给你们。— 约翰福音 14:27 | Peace I leave with you. — John 14:27",
+    "我就是道路、真理、生命。— 约翰福音 14:6 | I am the way and the truth and the life. — John 14:6",
+    "神爱世人。— 约翰福音 3:16 | For God so loved the world. — John 3:16",
+    "凡接待他的，就是信他名的人。— 约翰福音 1:12 | To all who received Him, He gave the right to become children of God. — John 1:12",
+    "耶和华是良善正直的。— 诗篇 25:8 | Good and upright is the Lord. — Psalm 25:8",
+    "你们要尝尝主恩的滋味。— 诗篇 34:8 | Taste and see that the Lord is good. — Psalm 34:8",
+    "等候耶和华的必重新得力。— 以赛亚书 40:31 | Those who hope in the Lord will renew their strength. — Isaiah 40:31",
+    "他必像园子浇灌的水。— 以赛亚书 58:11 | You will be like a well-watered garden. — Isaiah 58:11",
+    "我知道我向你们所怀的意念。— 耶利米书 29:11 | For I know the plans I have for you. — Jeremiah 29:11",
+    "耶和华本为善。— 诗篇 100:5 | The Lord is good. — Psalm 100:5",
+    "你的话是我脚前的灯。— 诗篇 119:105 | Your word is a lamp to my feet. — Psalm 119:105",
+    "你必将生命的道路指示我。— 诗篇 16:11 | You make known to me the path of life. — Psalm 16:11",
+    "义人的道路好像黎明的光。— 箴言 4:18 | The path of the righteous is like the morning sun. — Proverbs 4:18",
+    "愿主耶稣的恩惠常与你们同在。— 启示录 22:21 | The grace of the Lord Jesus be with God’s people. — Revelation 22:21"
   ];
-  // =========================================
 
-  const STORAGE_KEY = "lucky_phrase_v1";
-
+  // ===========================
+  // 2) 固定抽签：同一设备/浏览器只抽一次
+  //    如果你以后想“全员重新抽”，我也能给你改成版本号控制。
+  // ===========================
+  const STORAGE_KEY = "cny_blessing_v1"; // 想让“所有人重抽”→ 改成 v2/v3...
   const qs = new URLSearchParams(location.search);
   const reset = qs.get("reset") === "1";
 
-  if (reset) {
-    localStorage.removeItem(STORAGE_KEY);
-  }
+  if (reset) localStorage.removeItem(STORAGE_KEY);
 
   const elQuote = document.getElementById("quote");
+  const elRef   = document.getElementById("ref");
   const elMeta  = document.getElementById("meta");
-  const elAdmin = document.getElementById("admin");
+  const elCount = document.getElementById("count");
+  const toast   = document.getElementById("toast");
 
-  function pickOne(arr) {
-    const i = Math.floor(Math.random() * arr.length);
-    return arr[i];
-  }
-
-  function nowISO() {
-    // 简单记录本地时间（不是必须）
+  const pad = (n) => String(n).padStart(2,"0");
+  const nowStamp = () => {
     const d = new Date();
-    const pad = (n) => String(n).padStart(2,"0");
     return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
-  }
+  };
+  const pickOne = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
+  // 存储结构：{ text, firstSeenAt }
   let saved = null;
-  try {
-    saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
-  } catch { saved = null; }
+  try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null"); } catch { saved = null; }
 
   if (!saved || !saved.text) {
-    const text = pickOne(PHRASES);
-    saved = { text, firstSeenAt: nowISO() };
+    saved = { text: pickOne(PHRASES), firstSeenAt: nowStamp() };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
   }
 
-  elQuote.textContent = saved.text;
-  elMeta.textContent = saved.firstSeenAt ? `首次抽取时间：${saved.firstSeenAt}` : "";
+  // 展示：把中文与英文分行（更好看）
+  const parts = saved.text.split("|").map(s => s.trim());
+  const zh = parts[0] || saved.text;
+  const en = parts[1] || "";
 
-  // 复制
+  elQuote.textContent = zh;
+  elRef.innerHTML = en ? `<b>English:</b> ${escapeHtml(en)}` : "";
+  elMeta.textContent = saved.firstSeenAt ? `首次抽取：${saved.firstSeenAt}` : "";
+  elCount.textContent = `经文库：${PHRASES.length} 条`;
+
+  // 复制/分享
+  const shareText = () => `${zh}\n${en ? en : ""}`.trim();
+
   document.getElementById("copyBtn").addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(saved.text);
-      alert("已复制 ✅");
-    } catch {
-      // 兼容处理
+    await copyText(shareText());
+    showToast("已复制 ✅");
+  });
+
+  document.getElementById("shareBtn").addEventListener("click", async () => {
+    const text = shareText();
+    if (navigator.share) {
+      try { await navigator.share({ title: "新年祝福", text }); }
+      catch { /* ignore */ }
+    } else {
+      await copyText(text);
+      showToast("已复制分享内容 ✅");
+    }
+  });
+
+  // 本机重抽（测试按钮）
+  document.getElementById("newBtn").addEventListener("click", () => {
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  });
+
+  // helpers
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 1600);
+  }
+
+  async function copyText(text){
+    try{
+      await navigator.clipboard.writeText(text);
+    }catch{
       const ta = document.createElement("textarea");
-      ta.value = saved.text;
+      ta.value = text;
       document.body.appendChild(ta);
       ta.select();
       document.execCommand("copy");
       ta.remove();
-      alert("已复制 ✅");
     }
-  });
+  }
 
-  // 分享（手机上会弹系统分享面板）
-  document.getElementById("shareBtn").addEventListener("click", async () => {
-    const shareText = `我抽到的幸运语句：${saved.text}`;
-    if (navigator.share) {
-      try { await navigator.share({ text: shareText, title: "幸运语句" }); }
-      catch {}
-    } else {
-      // 不支持 share 就复制
-      try { await navigator.clipboard.writeText(shareText); alert("已复制分享内容 ✅"); }
-      catch { alert(shareText); }
-    }
-  });
-
-  // 管理员提示（可删）
-  if (reset) elAdmin.innerHTML = "已重置本机记录（仅当前设备）";
-  else elAdmin.innerHTML = `管理员可用：在链接后加 <b>?reset=1</b> 进行本机重置（可删除此功能）`;
+  function escapeHtml(str){
+    return String(str)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
 })();
 </script>
 </body>
