@@ -300,7 +300,7 @@
       </div>
 
       <div class="quoteBox">
-        <div class="label">今日祝福 BLESSING</div>
+        <div class="label">新年祝福 BLESSING</div>
         <div id="quote" class="quote">正在抽取…</div>
         <div id="ref" class="ref"></div>
       </div>
@@ -437,7 +437,7 @@
   // 2) 固定抽签：同一设备/浏览器只抽一次
   //    如果你以后想“全员重新抽”，我也能给你改成版本号控制。
   // ===========================
-  const STORAGE_KEY = "cny_blessing_v1.1"; // 想让“所有人重抽”→ 改成 v2/v3...
+  const STORAGE_KEY = "cny_blessing_v1.2"; // 想让“所有人重抽”→ 改成 v2/v3...
   const qs = new URLSearchParams(location.search);
   const reset = qs.get("reset") === "1";
 
@@ -532,6 +532,7 @@
 </script>
 </body>
 </html>
+
 
 
 
