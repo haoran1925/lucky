@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>🎡 新年祝福幸运轮盘（100句）</title>
+  <style>
+    :root{
+      --bg1:#2b0000;
+      --bg2:#7a0000;
+      --gold:#ffd86b;
+      --gold2:#f3c969;
+      --card:#fff7ee;
+      --ink:#111;
+      --muted:#6b7280;
+      --shadow: 0 18px 60px rgba(0,0,0,.35);
+      --radius: 22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+      color: var(--ink);
+      background: radial-gradient(1200px 800px at 20% 10%, #b30000 0%, transparent 60%),
+                  radial-gradient(1000px 700px at 80% 0%, #ffb70333 0%, transparent 65%),
+                  linear-gradient(180deg, var(--bg2), var(--bg1));
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+    .wrap{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px 16px 42px;
+      position:relative;
+    }
+    .spark{
+      position:absolute; inset:0;
+      pointer-events:none;
+      opacity:.55;
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(255,216,107,.9) 0 1.3px, transparent 2.2px),
+        radial-gradient(circle at 18% 60%, rgba(255,216,107,.55) 0 1.2px, transparent 2.6px),
+        radial-gradient(circle at 80% 22%, rgba(255,216,107,.75) 0 1.4px, transparent 2.8px),
+        radial-gradient(circle at 72% 70%, rgba(255,216,107,.45) 0 1.1px, transparent 2.6px),
+        radial-gradient(circle at 48% 30%, rgba(255,255,255,.35) 0 1px, transparent 2.6px),
+        radial-gradient(circle at 55% 80%, rgba(255,255,255,.25) 0 1px, transparent 2.8px);
+      background-size:100% 100%;
+      filter: blur(.2px);
+    }
+
+    .card{
+      width:min(920px, 100%);
+      background: linear-gradient(180deg, #fffaf3 0%, var(--card) 45%, #fff2e1 100%);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,216,107,.4);
+      overflow:hidden;
+    }
+    .hd{
+      padding: 16px 18px;
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+      border-bottom: 1px solid rgba(0,0,0,.08);
+    }
+    .hd h1{margin:0; font-size:18px; color:#7a0000}
+    .hd p{margin:4px 0 0; font-size:12.5px; color:var(--muted); line-height:1.25}
+    .badge{
+      flex:0 0 auto;
+      font-size:12px;
+      font-weight:800;
+      color:#7a0000;
+      background: linear-gradient(180deg, var(--gold), var(--gold2));
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(0,0,0,.06);
+      white-space:nowrap;
+    }
+
+    .body{
+      padding: 18px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items:center;
+    }
+    @media (max-width: 900px){
+      .body{grid-template-columns: 1fr}
+    }
+
+    .wheelWrap{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      padding: 10px 0 0;
+    }
+    .stage{
+      width: min(520px, 92vw);
+      aspect-ratio: 1 / 1;
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    canvas{
+      width: 100%;
+      height: 100%;
+      border-radius:999px;
+      border: 10px solid rgba(255,216,107,.95);
+      background: rgba(255,255,255,.12);
+      box-shadow: 0 16px 40px rgba(0,0,0,.25);
+    }
+    .pointer{
+      position:absolute;
+      top:-8px;
+      left:50%;
+      transform: translateX(-50%);
+      width:0;height:0;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      border-bottom: 26px solid #7a0000;
+      filter: drop-shadow(0 8px 10px rgba(0,0,0,.25));
+    }
+
+    .panel{
+      background:#fff;
+      border-radius: 18px;
+      border: 1px solid rgba(255,216,107,.45);
+      box-shadow: 0 10px 22px rgba(0,0,0,.06);
+      padding: 16px;
+    }
+    .label{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.12em;
+      color:#7a0000;
+      text-transform:uppercase;
+      background: linear-gradient(180deg, rgba(255,216,107,.55), rgba(255,216,107,.18));
+      padding:7px 10px;
+      border-radius:999px;
+      border: 1px solid rgba(255,216,107,.5);
+    }
+    .quote{
+      margin: 12px 0 0;
+      font-size: 22px;
+      line-height:1.5;
+      font-weight: 900;
+      word-break: break-word;
+    }
+    .ref{
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height:1.55;
+    }
+    .meta{
+      margin-top: 10px;
+      font-size: 12.5px;
+      color: #9ca3af;
+      line-height:1.4;
+    }
+
+    .btns{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top: 14px;
+    }
+    button{
+      cursor:pointer;
+      border:0;
+      border-radius: 14px;
+      padding: 11px 14px;
+      font-size: 14px;
+      font-weight: 900;
+    }
+    .primary{
+      background: linear-gradient(180deg, #d30000, #8a0000);
+      color:#fff;
+      box-shadow: 0 14px 24px rgba(211,0,0,.28);
+    }
+    .ghost{
+      background:#f3f4f6;
+      color:#111;
+      border:1px solid rgba(0,0,0,.08);
+      box-shadow:none;
+    }
+    button:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 16px;
+      transform: translateX(-50%);
+      background: rgba(17,17,17,.92);
+      color: #fff;
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      opacity: 0;
+      pointer-events:none;
+      transition: opacity .25s ease;
+      z-index: 9999;
+      max-width: 92vw;
+      text-align:center;
+    }
+    .toast.show{opacity:1}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="spark"></div>
+
+    <div class="card">
+      <div class="hd">
+        <div>
+          <h1>🎡 新年祝福幸运轮盘（100句）</h1>
+          <p>点击旋转抽取一句祝福（同一设备/浏览器只抽一次；管理测试可用 <b>?reset=1</b>）</p>
+        </div>
+        <div class="badge" id="badge">First draw sticks</div>
+      </div>
+
+      <div class="body">
+        <div class="wheelWrap">
+          <div class="stage">
+            <div class="pointer" aria-hidden="true"></div>
+            <canvas id="wheel" width="900" height="900"></canvas>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="label">今日祝福 BLESSING</div>
+          <div id="zh" class="quote">点击“开始抽取”旋转轮盘</div>
+          <div id="en" class="ref"></div>
+          <div id="meta" class="meta"></div>
+
+          <div class="btns">
+            <button class="primary" id="spinBtn">开始抽取</button>
+            <button class="ghost" id="copyBtn" disabled>复制祝福</button>
+          </div>
+
+          <div class="meta" style="margin-top:12px;">
+            温馨提示：无痕模式、换浏览器/设备、或清除网站数据，会被视为新用户重新抽取。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast">已复制 ✅</div>
+  </div>
+
+<script>
+(() => {
+  // ====== 100 句祝福（你之前那100条）======
+  const PHRASES = [
+    "愿耶和华赐福给你，保护你。— 民数记 6:24 | The Lord bless you and keep you. — Numbers 6:24",
+    "愿耶和华使他的脸光照你。— 民数记 6:25 | The Lord make His face shine upon you. — Numbers 6:25",
+    "愿耶和华向你仰脸，赐你平安。— 民数记 6:26 | The Lord give you peace. — Numbers 6:26",
+    "你要专心仰赖耶和华。— 箴言 3:5 | Trust in the Lord with all your heart. — Proverbs 3:5",
+    "在你一切所行的事上都要认定他。— 箴言 3:6 | In all your ways acknowledge Him. — Proverbs 3:6",
+    "喜乐的心乃是良药。— 箴言 17:22 | A joyful heart is good medicine. — Proverbs 17:22",
+    "敬畏耶和华，使人日子加多。— 箴言 10:27 | The fear of the Lord adds length to life. — Proverbs 10:27",
+    "耶和华所赐的福使人富足。— 箴言 10:22 | The blessing of the Lord brings wealth. — Proverbs 10:22",
+    "凡敬畏耶和华的人便为有福。— 诗篇 128:1 | Blessed are all who fear the Lord. — Psalm 128:1",
+    "你出你入，耶和华要保护你。— 诗篇 121:8 | The Lord will watch over your coming and going. — Psalm 121:8",
+    "神是我们的避难所和力量。— 诗篇 46:1 | God is our refuge and strength. — Psalm 46:1",
+    "当将你的事交托耶和华。— 诗篇 37:5 | Commit your way to the Lord. — Psalm 37:5",
+    "你们要休息，要知道我是神。— 诗篇 46:10 | Be still and know that I am God. — Psalm 46:10",
+    "我的心哪，你要称颂耶和华。— 诗篇 103:1 | Praise the Lord, my soul. — Psalm 103:1",
+    "耶和华是我的牧者，我必不致缺乏。— 诗篇 23:1 | The Lord is my shepherd; I lack nothing. — Psalm 23:1",
+    "你们要靠主常常喜乐。— 腓立比书 4:4 | Rejoice in the Lord always. — Philippians 4:4",
+    "应当一无挂虑。— 腓立比书 4:6 | Do not be anxious about anything. — Philippians 4:6",
+    "神所赐的平安必保守你们的心怀意念。— 腓立比书 4:7 | The peace of God will guard your hearts. — Philippians 4:7",
+    "我靠着那加给我力量的，凡事都能做。— 腓立比书 4:13 | I can do all things through Him who strengthens me. — Philippians 4:13",
+    "我们晓得万事都互相效力。— 罗马书 8:28 | In all things God works for good. — Romans 8:28",
+    "爱是恒久忍耐，又有恩慈。— 哥林多前书 13:4 | Love is patient, love is kind. — 1 Corinthians 13:4",
+    "如今常存的有信、望、爱。— 哥林多前书 13:13 | Faith, hope and love remain. — 1 Corinthians 13:13",
+    "你当刚强壮胆。— 约书亚记 1:9 | Be strong and courageous. — Joshua 1:9",
+    "因为耶和华你的神与你同在。— 约书亚记 1:9 | The Lord your God will be with you. — Joshua 1:9",
+    "主是我的亮光，是我的拯救。— 诗篇 27:1 | The Lord is my light and my salvation. — Psalm 27:1",
+    "投靠耶和华的人有福了。— 诗篇 2:12 | Blessed are all who take refuge in Him. — Psalm 2:12",
+    "耶和华靠近伤心的人。— 诗篇 34:18 | The Lord is close to the brokenhearted. — Psalm 34:18",
+    "当称谢进入他的门。— 诗篇 100:4 | Enter His gates with thanksgiving. — Psalm 100:4",
+    "你们要赞美耶和华。— 诗篇 150:6 | Let everything that has breath praise the Lord. — Psalm 150:6",
+    "敬畏耶和华是智慧的开端。— 箴言 9:10 | The fear of the Lord is the beginning of wisdom. — Proverbs 9:10",
+    "耶和华必成就关乎我的事。— 诗篇 138:8 | The Lord will fulfill His purpose for me. — Psalm 138:8",
+    "你们要先求他的国和他的义。— 马太福音 6:33 | Seek first His kingdom and His righteousness. — Matthew 6:33",
+    "叩门的就给他开门。— 马太福音 7:8 | The one who knocks, the door will be opened. — Matthew 7:8",
+    "凡劳苦担重担的人可以到我这里来。— 马太福音 11:28 | Come to me, all who are weary. — Matthew 11:28",
+    "你们心里不要忧愁。— 约翰福音 14:1 | Do not let your hearts be troubled. — John 14:1",
+    "我留下平安给你们。— 约翰福音 14:27 | Peace I leave with you. — John 14:27",
+    "我就是道路、真理、生命。— 约翰福音 14:6 | I am the way and the truth and the life. — John 14:6",
+    "神爱世人。— 约翰福音 3:16 | For God so loved the world. — John 3:16",
+    "凡接待他的，就是信他名的人。— 约翰福音 1:12 | To all who received Him, He gave the right to become children of God. — John 1:12",
+    "耶和华是良善正直的。— 诗篇 25:8 | Good and upright is the Lord. — Psalm 25:8",
+    "你们要尝尝主恩的滋味。— 诗篇 34:8 | Taste and see that the Lord is good. — Psalm 34:8",
+    "等候耶和华的必重新得力。— 以赛亚书 40:31 | Those who hope in the Lord will renew their strength. — Isaiah 40:31",
+    "他必像园子浇灌的水。— 以赛亚书 58:11 | You will be like a well-watered garden. — Isaiah 58:11",
+    "我知道我向你们所怀的意念。— 耶利米书 29:11 | For I know the plans I have for you. — Jeremiah 29:11",
+    "耶和华本为善。— 诗篇 100:5 | The Lord is good. — Psalm 100:5",
+    "你的话是我脚前的灯。— 诗篇 119:105 | Your word is a lamp to my feet. — Psalm 119:105",
+    "你必将生命的道路指示我。— 诗篇 16:11 | You make known to me the path of life. — Psalm 16:11",
+    "义人的道路好像黎明的光。— 箴言 4:18 | The path of the righteous is like the morning sun. — Proverbs 4:18",
+    "愿主耶稣的恩惠常与你们同在。— 启示录 22:21 | The grace of the Lord Jesus be with God’s people. — Revelation 22:21",
+
+    "你们要将一切的忧虑卸给神。— 彼得前书 5:7 | Cast all your anxiety on Him. — 1 Peter 5:7",
+    "神阻挡骄傲的人，赐恩给谦卑的人。— 彼得前书 5:5 | God opposes the proud but gives grace to the humble. — 1 Peter 5:5",
+    "主必亲自成全你们。— 彼得前书 5:10 | He will restore you and make you strong. — 1 Peter 5:10",
+    "凡事谢恩。— 帖撒罗尼迦前书 5:18 | Give thanks in all circumstances. — 1 Thessalonians 5:18",
+    "要常常喜乐。— 帖撒罗尼迦前书 5:16 | Rejoice always. — 1 Thessalonians 5:16",
+    "要不住地祷告。— 帖撒罗尼迦前书 5:17 | Pray continually. — 1 Thessalonians 5:17",
+    "你们要彼此相爱。— 约翰福音 13:34 | Love one another. — John 13:34",
+    "神就是爱。— 约翰一书 4:8 | God is love. — 1 John 4:8",
+    "我们爱，因为神先爱我们。— 约翰一书 4:19 | We love because He first loved us. — 1 John 4:19",
+    "凡从神生的，就胜过世界。— 约翰一书 5:4 | Everyone born of God overcomes the world. — 1 John 5:4",
+    "敬畏耶和华是智慧的训诲。— 箴言 15:33 | The fear of the Lord teaches wisdom. — Proverbs 15:33",
+    "温柔的人有福了。— 马太福音 5:5 | Blessed are the meek. — Matthew 5:5",
+    "清心的人有福了。— 马太福音 5:8 | Blessed are the pure in heart. — Matthew 5:8",
+    "使人和睦的人有福了。— 马太福音 5:9 | Blessed are the peacemakers. — Matthew 5:9",
+    "你们是世上的光。— 马太福音 5:14 | You are the light of the world. — Matthew 5:14",
+    "你们是世上的盐。— 马太福音 5:13 | You are the salt of the earth. — Matthew 5:13",
+    "施比受更为有福。— 使徒行传 20:35 | It is more blessed to give than to receive. — Acts 20:35",
+    "你们当刚强，凡事都要凭爱心而做。— 哥林多前书 16:13-14 | Be strong. Do everything in love. — 1 Corinthians 16:13-14",
+    "若有人在基督里，他就是新造的人。— 哥林多后书 5:17 | If anyone is in Christ, the new creation has come. — 2 Corinthians 5:17",
+    "我的恩典够你用的。— 哥林多后书 12:9 | My grace is sufficient for you. — 2 Corinthians 12:9",
+    "你们要靠主的大能大力作刚强的人。— 以弗所书 6:10 | Be strong in the Lord. — Ephesians 6:10",
+    "爱心说诚实话。— 以弗所书 4:15 | Speaking the truth in love. — Ephesians 4:15",
+    "你们要彼此恩慈相待。— 以弗所书 4:32 | Be kind and compassionate to one another. — Ephesians 4:32",
+    "要以恩慈相待，存怜悯的心。— 以弗所书 4:32 | Be kind and compassionate. — Ephesians 4:32",
+    "要用诗章、颂词、灵歌彼此对说。— 以弗所书 5:19 | Speak to one another with psalms, hymns, and songs. — Ephesians 5:19",
+    "要凡事奉主耶稣的名感谢父神。— 歌罗西书 3:17 | Give thanks to God the Father through Him. — Colossians 3:17",
+    "你们所做的都要从心里做。— 歌罗西书 3:23 | Work at it with all your heart. — Colossians 3:23",
+    "要存怜悯、恩慈、谦虚、温柔、忍耐的心。— 歌罗西书 3:12 | Clothe yourselves with compassion, kindness, humility, gentleness and patience. — Colossians 3:12",
+    "总要以爱心为联络全德。— 歌罗西书 3:14 | Put on love, which binds everything together. — Colossians 3:14",
+    "你们要让基督的平安在心里作主。— 歌罗西书 3:15 | Let the peace of Christ rule in your hearts. — Colossians 3:15",
+    "你们要坚固不可摇动。— 哥林多前书 15:58 | Stand firm. Let nothing move you. — 1 Corinthians 15:58",
+    "仰望为我们信心创始成终的耶稣。— 希伯来书 12:2 | Fixing our eyes on Jesus. — Hebrews 12:2",
+    "信就是所望之事的实底。— 希伯来书 11:1 | Faith is confidence in what we hope for. — Hebrews 11:1",
+    "主是帮助我的，我必不惧怕。— 希伯来书 13:6 | The Lord is my helper; I will not be afraid. — Hebrews 13:6",
+    "凡事都不可亏欠人，惟有彼此相爱。— 罗马书 13:8 | Let no debt remain except love. — Romans 13:8",
+    "盼望不至于羞耻。— 罗马书 5:5 | Hope does not put us to shame. — Romans 5:5",
+    "在指望中要喜乐。— 罗马书 12:12 | Be joyful in hope. — Romans 12:12",
+    "与喜乐的人要同乐。— 罗马书 12:15 | Rejoice with those who rejoice. — Romans 12:15",
+    "不要以恶报恶。— 罗马书 12:17 | Do not repay anyone evil for evil. — Romans 12:17",
+    "要以善胜恶。— 罗马书 12:21 | Overcome evil with good. — Romans 12:21",
+    "你们当顺着圣灵而行。— 加拉太书 5:16 | Walk by the Spirit. — Galatians 5:16",
+    "圣灵所结的果子就是仁爱、喜乐、和平。— 加拉太书 5:22 | The fruit of the Spirit is love, joy, peace. — Galatians 5:22",
+    "不可丧志，若不灰心，到了时候就要收成。— 加拉太书 6:9 | Let us not become weary in doing good. — Galatians 6:9",
+    "各人的重担要互相担当。— 加拉太书 6:2 | Carry each other’s burdens. — Galatians 6:2",
+    "主是信实的。— 帖撒罗尼迦后书 3:3 | The Lord is faithful. — 2 Thessalonians 3:3",
+    "愿主引导你们的心。— 帖撒罗尼迦后书 3:5 | May the Lord direct your hearts. — 2 Thessalonians 3:5",
+    "神赐给我们的不是胆怯的心。— 提摩太后书 1:7 | God gave us a spirit not of fear. — 2 Timothy 1:7",
+    "务要传道。— 提摩太后书 4:2 | Preach the word. — 2 Timothy 4:2",
+    "主必救我脱离诸般的凶恶。— 提摩太后书 4:18 | The Lord will rescue me from every evil attack. — 2 Timothy 4:18"
+  ];
+
+  // ====== 固定只抽一次（每设备/浏览器）======
+  const STORAGE_KEY = "blessing_wheel_v1"; // 想全员重抽→改成 v2/v3
+  const qs = new URLSearchParams(location.search);
+  const reset = qs.get("reset") === "1";
+  if (reset) localStorage.removeItem(STORAGE_KEY);
+
+  const canvas = document.getElementById("wheel");
+  const ctx = canvas.getContext("2d");
+  const spinBtn = document.getElementById("spinBtn");
+  const copyBtn = document.getElementById("copyBtn");
+  const zhEl = document.getElementById("zh");
+  const enEl = document.getElementById("en");
+  const metaEl = document.getElementById("meta");
+  const toast = document.getElementById("toast");
+
+  let spinning = false;
+  let rotation = 0; // radians
+
+  function toastMsg(msg){
+    toast.textContent = msg;
+    toast.classList.add("show");
+    setTimeout(()=>toast.classList.remove("show"), 1400);
+  }
+
+  function nowStamp(){
+    const d = new Date();
+    const pad = n => String(n).padStart(2,"0");
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function parsePhrase(p){
+    const parts = String(p).split("|").map(s=>s.trim());
+    const zh = parts[0] || p;
+    const en = parts[1] || "";
+    return { zh, en };
+  }
+
+  function drawWheel(){
+    const n = PHRASES.length;
+    const cx = canvas.width/2, cy = canvas.height/2;
+    const r = Math.min(cx, cy) - 12;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    // background
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI*2);
+    ctx.fillStyle = "rgba(255,255,255,.04)";
+    ctx.fill();
+
+    const slice = (Math.PI*2)/n;
+
+    for(let i=0;i<n;i++){
+      const start = rotation + i*slice;
+      const end = start + slice;
+
+      // wedge
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, r, start, end);
+      ctx.closePath();
+
+      ctx.fillStyle = (i%2===0) ? "rgba(255,216,107,.92)" : "rgba(211,0,0,.18)";
+      ctx.fill();
+
+      ctx.strokeStyle = "rgba(0,0,0,.18)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // text (truncate)
+      const { zh } = parsePhrase(PHRASES[i]);
+      const label = zh.replace(/—.*$/,"").trim(); // remove ref for wheel label
+      const maxChars = n <= 24 ? 10 : n <= 60 ? 7 : 6;
+      const shown = label.length > maxChars ? (label.slice(0,maxChars) + "…") : label;
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(start + slice/2);
+      ctx.textAlign = "right";
+      ctx.fillStyle = (i%2===0) ? "#111" : "rgba(255,255,255,.92)";
+      const fs = n <= 24 ? 18 : n <= 60 ? 12 : 10;
+      ctx.font = `900 ${fs}px system-ui, -apple-system, Segoe UI, Roboto, sans-serif`;
+      ctx.fillText(shown, r - 18, 4);
+      ctx.restore();
+    }
+
+    // center cap
+    ctx.beginPath();
+    ctx.arc(cx, cy, 82, 0, Math.PI*2);
+    ctx.fillStyle = "rgba(0,0,0,.22)";
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 64, 0, Math.PI*2);
+    ctx.fillStyle = "rgba(255,255,255,.10)";
+    ctx.fill();
+
+    ctx.fillStyle = "rgba(255,255,255,.92)";
+    ctx.font = "900 16px system-ui, -apple-system, Segoe UI, Roboto, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("点击抽取", cx, cy+6);
+  }
+
+  function showResult(text, firstSeenAt){
+    const { zh, en } = parsePhrase(text);
+    zhEl.textContent = zh;
+    enEl.innerHTML = en ? `<b>English:</b> ${escapeHtml(en)}` : "";
+    metaEl.textContent = firstSeenAt ? `首次抽取：${firstSeenAt}（共 ${PHRASES.length} 条）` : `共 ${PHRASES.length} 条`;
+    copyBtn.disabled = false;
+  }
+
+  function escapeHtml(str){
+    return String(str)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  // ====== fixed draw check ======
+  let saved = null;
+  try{ saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null"); } catch { saved = null; }
+
+  // initial draw
+  drawWheel();
+
+  if (saved && saved.text){
+    showResult(saved.text, saved.firstSeenAt);
+    spinBtn.disabled = true;
+    spinBtn.textContent = "已抽取（本机锁定）";
+  }
+
+  async function copyText(text){
+    try{
+      await navigator.clipboard.writeText(text);
+    }catch{
+      const ta=document.createElement("textarea");
+      ta.value=text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+    }
+  }
+
+  copyBtn.addEventListener("click", async () => {
+    const text = (saved && saved.text) ? saved.text : `${zhEl.textContent}\n${enEl.textContent}`.trim();
+    await copyText(text);
+    toastMsg("已复制 ✅");
+  });
+
+  spinBtn.addEventListener("click", () => {
+    if (spinning) return;
+
+    // if already saved, lock
+    let existing = null;
+    try{ existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null"); } catch { existing = null; }
+    if (existing && existing.text){
+      saved = existing;
+      showResult(saved.text, saved.firstSeenAt);
+      spinBtn.disabled = true;
+      spinBtn.textContent = "已抽取（本机锁定）";
+      return;
+    }
+
+    spinning = true;
+    spinBtn.disabled = true;
+    spinBtn.textContent = "旋转中…";
+
+    const n = PHRASES.length;
+    const slice = (Math.PI*2)/n;
+
+    const winnerIndex = Math.floor(Math.random()*n);
+
+    // pointer at top (angle -90deg). Want winner center land at top.
+    const targetAngle = (Math.PI*1.5) - (winnerIndex*slice + slice/2);
+    const extra = (Math.PI*2) * (6 + Math.floor(Math.random()*3)); // 6-8 turns
+    const start = rotation;
+    const end = targetAngle + extra;
+
+    const duration = 4200;
+    const t0 = performance.now();
+    const easeOutCubic = t => 1 - Math.pow(1-t, 3);
+
+    function anim(t){
+      const p = Math.min(1, (t - t0)/duration);
+      rotation = start + (end - start) * easeOutCubic(p);
+      drawWheel();
+      if (p < 1){
+        requestAnimationFrame(anim);
+      }else{
+        spinning = false;
+        rotation = ((rotation % (Math.PI*2)) + Math.PI*2) % (Math.PI*2);
+
+        const text = PHRASES[winnerIndex];
+        saved = { text, firstSeenAt: nowStamp() };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+
+        showResult(saved.text, saved.firstSeenAt);
+        spinBtn.textContent = "已抽取（本机锁定）";
+        toastMsg("抽取完成 🎉");
+      }
+    }
+    requestAnimationFrame(anim);
+  });
+
+})();
+</script>
+</body>
+</html>
