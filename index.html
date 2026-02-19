@@ -316,7 +316,7 @@
 
       <div class="btns">
         <!-- ✅ 改成截图保存 -->
-        <button class="primary" id="saveBtn">截图保存</button>
+        <button class="primary" id="saveBtn">Screenshot 截图</button>
         <button class="ghost" id="shareBtn">分享</button>
       </div>
 
@@ -439,7 +439,7 @@
   // ===========================
   // 2) 固定抽签：同一设备/浏览器只抽一次
   // ===========================
-  const STORAGE_KEY = "cny_blessing_v1.2"; // 想让“所有人重抽”→ 改成 v2/v3...
+  const STORAGE_KEY = "cny_blessing_v1.3"; // 想让“所有人重抽”→ 改成 v2/v3...
   const qs = new URLSearchParams(location.search);
   const reset = qs.get("reset") === "1";
   if (reset) localStorage.removeItem(STORAGE_KEY);
@@ -559,4 +559,5 @@
 </script>
 </body>
 </html>
+
 
