@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>新年祝福抽签 | 春节经文</title>
   <meta name="description" content="扫码抽取你的新年祝福经文：每个人第一次抽到的内容固定不变。" />
+
+  <!-- ✅ 截图用：html2canvas -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
   <style>
     :root{
       --bg1:#2b0000;
@@ -113,9 +117,9 @@
     /* card */
     .card{
       width:min(860px, 100%);
-      background: linear-gradient(180deg, #fffaf3 0%, var(--card) 45%, #fff2e1 100%);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      background: linear-gradient(180deg, #fffaf3 0%, #fff7ee 45%, #fff2e1 100%);
+      border-radius: 22px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.35);
       position:relative;
       padding: 22px 22px 18px;
       border: 1px solid rgba(255,216,107,.4);
@@ -158,7 +162,7 @@
     .titles p{
       margin:4px 0 0;
       font-size: 12.5px;
-      color: var(--muted);
+      color: #6b7280;
       line-height:1.25;
     }
     .badge{
@@ -210,7 +214,7 @@
     .ref{
       margin-top: 10px;
       font-size: 13px;
-      color: var(--muted);
+      color: #6b7280;
       line-height:1.5;
     }
     .ref b{color:#7a0000}
@@ -221,7 +225,7 @@
       justify-content:space-between;
       gap:10px;
       margin-top: 14px;
-      color: var(--muted);
+      color: #6b7280;
       font-size: 12.5px;
     }
 
@@ -299,7 +303,7 @@
         <div class="badge">🎉 First draw sticks</div>
       </div>
 
-      <div class="quoteBox">
+      <div class="quoteBox" id="captureArea">
         <div class="label">新年祝福 BLESSING</div>
         <div id="quote" class="quote">正在抽取…</div>
         <div id="ref" class="ref"></div>
@@ -311,7 +315,8 @@
       </div>
 
       <div class="btns">
-        <button class="primary" id="copyBtn">复制祝福</button>
+        <!-- ✅ 改成截图保存 -->
+        <button class="primary" id="saveBtn">截图保存</button>
         <button class="ghost" id="shareBtn">分享</button>
       </div>
 
@@ -320,14 +325,13 @@
       </div>
     </div>
 
-    <div id="toast" class="toast">已复制 ✅</div>
+    <div id="toast" class="toast">已保存 ✅</div>
   </div>
 
 <script>
 (() => {
   // ===========================
-  // 1) 这里是“幸运语句库”（50句，中英文+出处）
-  //    格式：中文 — 书名 章:节 | English — Book Chapter:Verse
+  // 1) 这里是“幸运语句库”
   // ===========================
   const PHRASES = [
     "愿耶和华赐福给你，保护你。— 民数记 6:24 | The Lord bless you and keep you. — Numbers 6:24",
@@ -402,7 +406,6 @@
     "你们要靠主的大能大力作刚强的人。— 以弗所书 6:10 | Be strong in the Lord. — Ephesians 6:10",
     "爱心说诚实话。— 以弗所书 4:15 | Speaking the truth in love. — Ephesians 4:15",
     "你们要彼此恩慈相待。— 以弗所书 4:32 | Be kind and compassionate to one another. — Ephesians 4:32",
-    "要以恩慈相待，存怜悯的心。— 以弗所书 4:32 | Be kind and compassionate. — Ephesians 4:32",
     "要用诗章、颂词、灵歌彼此对说。— 以弗所书 5:19 | Speak to one another with psalms, hymns, and songs. — Ephesians 5:19",
     "要凡事奉主耶稣的名感谢父神。— 歌罗西书 3:17 | Give thanks to God the Father through Him. — Colossians 3:17",
     "你们所做的都要从心里做。— 歌罗西书 3:23 | Work at it with all your heart. — Colossians 3:23",
@@ -428,18 +431,14 @@
     "神赐给我们的不是胆怯的心。— 提摩太后书 1:7 | God gave us a spirit not of fear. — 2 Timothy 1:7",
     "务要传道。— 提摩太后书 4:2 | Preach the word. — 2 Timothy 4:2",
     "主必救我脱离诸般的凶恶。— 提摩太后书 4:18 | The Lord will rescue me from every evil attack. — 2 Timothy 4:18"
-
-
   ];
 
   // ===========================
   // 2) 固定抽签：同一设备/浏览器只抽一次
-  //    如果你以后想“全员重新抽”，我也能给你改成版本号控制。
   // ===========================
-  const STORAGE_KEY = "cny_blessing_v1.3"; // 想让“所有人重抽”→ 改成 v2/v3...
+  const STORAGE_KEY = "cny_blessing_v1.2"; // 想让“所有人重抽”→ 改成 v2/v3...
   const qs = new URLSearchParams(location.search);
   const reset = qs.get("reset") === "1";
-
   if (reset) localStorage.removeItem(STORAGE_KEY);
 
   const elQuote = document.getElementById("quote");
@@ -474,13 +473,8 @@
   elMeta.textContent = saved.firstSeenAt ? `首次抽取：${saved.firstSeenAt}` : "";
   elCount.textContent = `经文库：${PHRASES.length} 条`;
 
-  // 复制/分享
+  // 分享
   const shareText = () => `${zh}\n${en ? en : ""}`.trim();
-
-  document.getElementById("copyBtn").addEventListener("click", async () => {
-    await copyText(shareText());
-    showToast("已复制 ✅");
-  });
 
   document.getElementById("shareBtn").addEventListener("click", async () => {
     const text = shareText();
@@ -493,11 +487,42 @@
     }
   });
 
-  // 本机重抽（测试按钮）
-  document.getElementById("newBtn").addEventListener("click", () => {
-    localStorage.removeItem(STORAGE_KEY);
-    location.reload();
+  // ✅ 截图保存（下载 PNG）
+  document.getElementById("saveBtn").addEventListener("click", async () => {
+    try {
+      showToast("正在生成图片…");
+
+      const card = document.querySelector(".card");
+      const canvas = await html2canvas(card, {
+        backgroundColor: null, // 保留透明/更接近原页面效果
+        scale: 2,              // 高清一点
+        useCORS: true
+      });
+
+      const fileSafeTime = saved.firstSeenAt
+        ? saved.firstSeenAt.replaceAll(":","").replaceAll(" ","_").replaceAll("-","")
+        : "now";
+
+      const a = document.createElement("a");
+      a.download = `新年祝福_${fileSafeTime}.png`;
+      a.href = canvas.toDataURL("image/png");
+      a.click();
+
+      showToast("已保存 ✅（如未弹出下载，请检查浏览器下载设置）");
+    } catch (e) {
+      showToast("截图失败 ❌（请换浏览器或关闭拦截下载）");
+      console.error(e);
+    }
   });
+
+  // 你原来有 newBtn，但 HTML 没有这个按钮；这里加判断避免报错
+  const newBtn = document.getElementById("newBtn");
+  if (newBtn) {
+    newBtn.addEventListener("click", () => {
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    });
+  }
 
   // helpers
   function showToast(msg){
@@ -524,18 +549,10 @@
       .replaceAll("&","&amp;")
       .replaceAll("<","&lt;")
       .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
+      .replaceAll('"'," &quot;")
       .replaceAll("'","&#039;");
   }
 })();
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
